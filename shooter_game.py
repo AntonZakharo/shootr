@@ -92,9 +92,6 @@ while game:
         crushed = new_font.render('Сбитых: '+ str(crush), True, (255, 255, 255))
         losted = new_font.render('Пропущенных: ' + str(lost), True, (255, 255, 255))
         live = font3.render('Здоровье: '+ str(lives),True,(255,255,255))
-        window.blit(live, (450,10))
-        window.blit(crushed, (10,10))
-        window.blit(losted, (10,30))
         spaceship.update()
         bullets.draw(window)
         bullets.update()
@@ -104,19 +101,25 @@ while game:
         sprite_group = sprite.spritecollide(spaceship,enemys,True)
         sprite_group2 = sprite.groupcollide(bullets,enemys,True,True)
         sprite_group3 = sprite.spritecollide(spaceship,asteroids,True)
-        if sprite_group or sprite_group3 or lost >= 10:
-            if lives < 1:
-                lose = nfont.render('You lose', True, (255,255,255))
-                window.blit(lose,(200,200))
-                finished = True
-            else:
-                lives -= 1
-        elif crush >= 10:
+        for sprit in sprite_group:
+            lives -= 1
+            enemy = Enemy('ufo.png',randint(2,3),randint(30,650),0,75,60)
+            enemys.add(enemy)
+        for asteroid in sprite_group3:
+            lives -= 1
+            asteroid1 = Asteroid('asteroid.png',randint(2,3),randint(30,650),0,60,60)
+            asteroids.add(asteroid1)
+        if lives < 1 or lost >= 30:
+            live = font3.render('Здоровье: '+ str(lives),True,(255,255,255))
+            lose = nfont.render('You lose', True, (255,255,255))
+            window.blit(lose,(200,200))
+            finished = True
+        elif crush >= 5000:
             win = nfont.render('You win', True, (255,255,255))
             window.blit(win, (200,200))
             finished = True
         for sprited in sprite_group2:
-            crush += 1
+            crush += randint(1,4)*100
             crushed = new_font.render('Сбитых: '+ str(crush), True, (255, 255, 255))
             enemy = Enemy('ufo.png',randint(2,3),randint(30,650),0,75,60)
             enemys.add(enemy)
@@ -128,6 +131,9 @@ while game:
             else:
                 reloading = False
                 num_bul = 5
+        window.blit(live, (450,10))
+        window.blit(crushed, (10,10))
+        window.blit(losted, (10,30))
         enemys.update()
         clock.tick(60)
         display.update()
